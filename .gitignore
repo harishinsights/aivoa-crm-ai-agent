@@ -1,0 +1,13 @@
+# Ignore Node.js modules
+frontend/node_modules/
+
+# Ignore Python virtual environments and caches
+backend/venv/
+backend/__pycache__/
+
+# Ignore Environment variables (API keys and Passwords)
+backend/.env
+.env
+
+# Ignore Mac system files (just in case)
+.DS_Store
