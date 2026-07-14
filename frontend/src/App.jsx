@@ -44,7 +44,7 @@ function App() {
         }
         dispatch(setFormData(mappedData));
       } 
-      // If the AI used the Edit Tool, update multiple fields at once (NEW FIX)
+      // If the AI used the Edit Tool, update multiple fields at once
       else if (action === 'EDIT_INTERACTION' && action_data) {
         for (const pyField in action_data) {
           const reactField = fieldMapping[pyField];
@@ -64,27 +64,117 @@ function App() {
       
       {/* LEFT PANEL: The CRM Form (Read Only) */}
       <div className="left-panel">
-        <h2 style={{marginTop: 0}}>Interaction Details</h2>
-        <p style={{color: '#d9534f', fontSize: '13px', fontWeight: 'bold'}}>
+        <h2 style={{marginTop: 0, fontSize: '18px', color: '#1f2937'}}>Interaction Details</h2>
+        <p style={{color: '#d9534f', fontSize: '12px', fontWeight: 'bold', marginBottom: '20px'}}>
           🔒 Strict Mode: Manual entry is disabled. Use the AI to populate this form.
         </p>
 
-        <div className="form-group"><label>HCP Name</label><input type="text" value={formData.hcpName} disabled /></div>
-        <div style={{display: 'flex', gap: '10px'}}>
-          <div className="form-group" style={{flex: 1}}><label>Date</label><input type="text" value={formData.interactionDate} disabled /></div>
-          <div className="form-group" style={{flex: 1}}><label>Time</label><input type="text" value={formData.interactionTime} disabled /></div>
+        {/* Row 1: HCP Name & Interaction Type */}
+        <div className="form-row">
+          <div className="form-group half-width">
+            <label>HCP Name</label>
+            <input type="text" value={formData.hcpName || ''} disabled placeholder="Search or select HCP..." />
+          </div>
+          <div className="form-group half-width">
+            <label>Interaction Type</label>
+            <select value={formData.interactionType || ''} disabled>
+              <option value="">Meeting</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Call">Call</option>
+              <option value="Email">Email</option>
+            </select>
+          </div>
         </div>
-        <div className="form-group"><label>Type of Interaction</label><input type="text" value={formData.interactionType} disabled /></div>
-        <div className="form-group"><label>Sentiment</label><input type="text" value={formData.sentiment} disabled /></div>
-        <div className="form-group"><label>Topics Discussed</label><textarea rows="2" value={formData.topicsDiscussed} disabled /></div>
-        <div className="form-group"><label>Materials Shared</label><textarea rows="2" value={formData.materialsShared} disabled /></div>
-        <div className="form-group"><label>Follow-up Actions</label><textarea rows="2" value={formData.followUpActions} disabled /></div>
+
+        {/* Row 2: Date & Time */}
+        <div className="form-row">
+          <div className="form-group half-width">
+            <label>Date</label>
+            <input type="text" value={formData.interactionDate || ''} disabled placeholder="DD-MM-YYYY" />
+          </div>
+          <div className="form-group half-width">
+            <label>Time</label>
+            <input type="text" value={formData.interactionTime || ''} disabled placeholder="HH:MM" />
+          </div>
+        </div>
+
+        {/* Attendees */}
+        <div className="form-group">
+          <label>Attendees</label>
+          <input type="text" value={formData.attendees || ''} disabled placeholder="Enter names or search..." />
+        </div>
+
+        {/* Topics Discussed & Voice Note Button */}
+        <div className="form-group">
+          <label>Topics Discussed</label>
+          <textarea rows="3" value={formData.topicsDiscussed || ''} disabled placeholder="Enter key discussion points..."></textarea>
+        </div>
+        <button className="voice-note-btn" disabled>
+          ✨ Summarize from Voice Note (Requires Consent)
+        </button>
+
+        {/* Materials Box */}
+        <div className="materials-box">
+          <div className="form-group">
+            <label>Materials Shared</label>
+            <div style={{display: 'flex', gap: '10px'}}>
+              <input type="text" value={formData.materialsShared || ''} disabled placeholder="No materials added." />
+              <button className="dummy-btn" disabled>🔍 Search/Add</button>
+            </div>
+          </div>
+          <div className="form-group" style={{marginBottom: 0}}>
+            <label>Samples Distributed</label>
+            <div style={{display: 'flex', gap: '10px'}}>
+              <input type="text" disabled placeholder="No samples added." />
+              <button className="dummy-btn" disabled>📦 Add Sample</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Sentiment Radio Buttons */}
+        <div className="form-group">
+          <label>Observed/Inferred HCP Sentiment</label>
+          <div className="sentiment-radio-group">
+            <label><input type="radio" checked={formData.sentiment === 'Positive'} disabled /> 😊 Positive</label>
+            <label><input type="radio" checked={formData.sentiment === 'Neutral'} disabled /> 😐 Neutral</label>
+            <label><input type="radio" checked={formData.sentiment === 'Negative'} disabled /> ☹️ Negative</label>
+          </div>
+        </div>
+
+        {/* Outcomes */}
+        <div className="form-group">
+          <label>Outcomes</label>
+          <textarea rows="2" value={formData.outcomes || ''} disabled placeholder="Key outcomes or agreements..."></textarea>
+        </div>
+
+        {/* Follow-up Actions */}
+        <div className="form-group">
+          <label>Follow-up Actions</label>
+          <textarea rows="2" value={formData.followUpActions || ''} disabled placeholder="Enter next steps or tasks..."></textarea>
+        </div>
+
+        {/* AI Suggestions */}
+        <div className="ai-suggestions">
+          <p><strong>AI Suggested Follow-ups:</strong></p>
+          <ul>
+            <li>+ Schedule follow-up meeting in 2 weeks</li>
+            <li>+ Send OncoBoost Phase III PDF</li>
+            <li>+ Add Dr. Sharma to advisory board invite list</li>
+          </ul>
+        </div>
       </div>
 
       {/* RIGHT PANEL: The AI Chat */}
       <div className="right-panel">
-        <h2 style={{marginTop: 0}}>AIVOA Chat Assistant</h2>
+        <div className="chat-header-container">
+          <h2 className="chat-title">🌐 AI Assistant</h2>
+          <span className="chat-subtitle">Log interaction via chat</span>
+        </div>
+        
         <div className="chat-history">
+          <div className="message msg-ai" style={{backgroundColor: '#fff', border: '1px solid #e0e0e0'}}>
+            Log interaction details here (e.g., "Met Dr. Smith, discussed Product X efficacy, positive sentiment, shared brochure") or ask for help.
+          </div>
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.sender === 'user' ? 'msg-user' : 'msg-ai'}`}>
               {msg.text}
@@ -96,13 +186,15 @@ function App() {
         <div className="chat-input">
           <input 
             type="text" 
-            placeholder="Type your meeting notes here..." 
+            placeholder="Describe interaction..." 
             value={input} 
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
             disabled={loading}
           />
-          <button onClick={sendMessage} disabled={loading}>Send</button>
+          <button className="log-btn" onClick={sendMessage} disabled={loading}>
+            <span>⏏ Log</span>
+          </button>
         </div>
       </div>
 
