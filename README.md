@@ -282,5 +282,4 @@ Tested and fully supported on:
 
 ## ✍️ Author
 **Harish Nerella**
-* **GitHub:** [@harishinsights](https://github.com/harishinsights)
 * Developed as a technical submission for the AIVOA CRM HCP Module Assignment.
