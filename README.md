@@ -282,4 +282,4 @@ Tested and fully supported on:
 
 ## ✍️ Author
 **Harish Nerella**
-* Developed as a technical submission for the AIVOA CRM HCP Module Assignment.
+* For questions, feedback, or collaboration, feel free to contact me at nerellaharish122@gmail.com
